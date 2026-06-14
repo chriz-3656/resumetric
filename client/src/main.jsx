@@ -18,6 +18,9 @@ ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend, CategoryScale, 
 
 const apiBase = import.meta.env.VITE_API_BASE_URL || '';
 
+// In production on Vercel, we must use relative paths to avoid localhost hardcoding.
+const apiRoot = window.location.hostname === 'localhost' ? apiBase : '';
+
 const industries = ['Cybersecurity', 'Accounting', 'Finance', 'Marketing', 'Software Engineering', 'Data Science', 'Cloud Computing', 'Networking', 'HR', 'Project Management'];
 const hallOfFame = [
   { site: 'CloudSec Lead', score: 94, tier: 'Top' },
@@ -87,7 +90,7 @@ function LandingPage() {
     form.append('jobDescription', jobDescription);
     
     try {
-      const response = await fetch(`${apiBase}/api/analyze`, {
+      const response = await fetch(`${apiRoot}/api/analyze`, {
         method: 'POST',
         body: form
       });
@@ -120,7 +123,7 @@ function LandingPage() {
   async function generateRewrite() {
     if (!analysis?.resumeText) return;
     setRewrite({ loading: true });
-    const response = await fetch(`${apiBase}/api/rewrite`, {
+    const response = await fetch(`${apiRoot}/api/rewrite`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ resumeText: analysis.resumeText, industry, jobDescription })
@@ -130,7 +133,7 @@ function LandingPage() {
 
   async function downloadReport() {
     if (!analysis) return;
-    const response = await fetch(`${apiBase}/api/report`, {
+    const response = await fetch(`${apiRoot}/api/report`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(analysis)
