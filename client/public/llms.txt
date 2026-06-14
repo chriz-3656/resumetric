@@ -1,0 +1,22 @@
+# ResuMetric | Enterprise Profile Analytics
+
+ResuMetric is a high-performance AI resume ATS analyzer for career intelligence and profile optimization.
+
+## Key Capabilities
+- Neural Resume Analysis via Gemini LLM.
+- ATS Visual Simulation and Recruiter Bias Emulation.
+- Keyword Gap Identification and Industry Benchmarking.
+- Heatmap Performance Visualization.
+- Automated Resume Revision Engine.
+- Professional PDF Diagnostic Reports.
+
+## Technical Specifications
+- Engine: Gemini 1.5 Flash.
+- Security: ISO-Aligned Data Purge (3600s TTL).
+- Architecture: Node.js / React / MongoDB.
+
+## API Endpoints
+- POST /api/analyze: Primary diagnostic ingestion.
+- POST /api/rewrite: LLM-driven copy optimization.
+- POST /api/report: PDF diagnostic synthesis.
+- GET /api/health: System operational check.

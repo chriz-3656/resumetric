@@ -1,0 +1,50 @@
+{
+  "name": "ai-resume-ats-analyzer-pro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI-powered Resume ATS Analyzer and Career Coach web application.",
+  "scripts": {
+    "dev": "concurrently \"nodemon server/index.js\" \"vite client --host 0.0.0.0\"",
+    "server": "node server/index.js",
+    "build": "vite build client",
+    "preview": "vite preview --host 0.0.0.0",
+    "start": "node server/index.js",
+    "vercel-build": "npm run build"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "chart.js": "^4.4.6",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "framer-motion": "^11.11.17",
+    "groq-sdk": "^1.2.1",
+    "helmet": "^8.0.0",
+    "mammoth": "^1.8.0",
+    "mongoose": "^9.7.0",
+    "multer": "^2.1.1",
+    "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.15.0",
+    "react": "^18.3.1",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.17.0",
+    "uuid": "^11.0.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
+    "nodemon": "^3.1.7",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "vite": "^8.0.16"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
