@@ -18,6 +18,10 @@ import { ResumeAnalysis, connectDB } from './services/mongodb.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
+
+// Trust Vercel's proxy for accurate rate limiting
+app.set('trust proxy', 1);
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 8 * 1024 * 1024 },
