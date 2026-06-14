@@ -13,7 +13,7 @@ import { analyzeResume, rewriteResume } from './services/gemini.js';
 import { analyzeWithGroq } from './services/groq.js';
 import { createReportPdf } from './services/report.js';
 import { detectAtsRisks, extractSections, keywordLibrary, scoreFallback } from './services/ats.js';
-import { ResumeAnalysis } from './services/mongodb.js';
+import { ResumeAnalysis, connectDB } from './services/mongodb.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,6 +50,7 @@ app.get('/api/industries', (_req, res) => {
 
 app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
   try {
+    await connectDB();
     if (!req.file) return res.status(400).json({ error: 'Resume file is required' });
     const body = z.object({
       industry: z.string().default('Software Engineering'),
@@ -169,9 +170,10 @@ if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
 }
 
 app.use((error, _req, res, _next) => {
+  console.error('SERVER_ERROR:', error);
   const message = error?.message || 'Unexpected server error';
   const status = message.includes('supported') || message.includes('required') ? 400 : 500;
-  res.status(status).json({ error: message });
+  res.status(status).json({ error: message, stack: process.env.NODE_ENV === 'development' ? error.stack : undefined });
 });
 
 export default app;
