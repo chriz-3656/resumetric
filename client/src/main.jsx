@@ -8,13 +8,15 @@ import {
   Legend,
   CategoryScale,
   LinearScale,
-  BarElement
+  BarElement,
+  PointElement,
+  LineElement
 } from 'chart.js';
 import { Radar, Doughnut, Bar } from 'react-chartjs-2';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import './styles.css';
 
-ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
+ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement);
 
 const apiBase = import.meta.env.VITE_API_BASE_URL || '';
 
