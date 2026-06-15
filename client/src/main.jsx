@@ -79,6 +79,14 @@ function LandingPage() {
   const [error, setError] = useState('');
   const [rewrite, setRewrite] = useState(null);
 
+  React.useEffect(() => {
+    if (analysis) {
+      setTimeout(() => {
+        document.getElementById('scores')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [analysis]);
+
   async function analyze() {
     if (!file) return setError('Upload a PDF or DOCX resume first.');
     setError('');
