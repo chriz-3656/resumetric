@@ -5,6 +5,7 @@ A high-performance, AI-powered Resume ATS Analyzer and Career Intelligence platf
 ## Key Features
 
 - **Dual-AI Engine**: Powered by Groq LPU (Llama-3) for sub-second diagnostics, with Google Gemini 1.5 Flash as a robust fallback and rewrite engine.
+- **Dynamic Role Auto-Detection**: Automatically infers the candidate's target job title, seniority, and industry from the resume text to provide highly contextualized scoring and keyword gap analysis.
 - **ATS Visual Simulation**: Automated diagnostics for structural and formatting risks.
 - **Performance Heatmap**: Actionable visual highlights of resume strengths and critical gaps.
 - **Privacy-First Architecture**: Automated 60-minute TTL data purge via MongoDB with transient-memory processing.
