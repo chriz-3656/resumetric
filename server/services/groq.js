@@ -4,9 +4,11 @@ const groq = process.env.GROQ_API_KEY ? new Groq({ apiKey: process.env.GROQ_API_
 const modelName = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 
 const systemPrompt = `Act as a Senior ATS Resume Reviewer and Career Coach. 
-Analyze the resume content against industry standards. 
+If the industry is "Auto-Detect" or the job description is empty, aggressively analyze the resume content to infer the candidate's primary profession, target job title, and seniority level.
+Base ALL scoring, keyword gap analysis, and recommendations strictly on the standards expected for this inferred role.
 You MUST return the response strictly in JSON format matching this exact schema:
 {
+  "inferredRole": string,
   "scores": {
     "atsScore": number (0-100),
     "recruiterScore": number (0-100),

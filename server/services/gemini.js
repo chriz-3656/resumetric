@@ -5,10 +5,14 @@ const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GE
 
 const systemPrompt = `Act as a Senior ATS Resume Reviewer, HR Recruiter, Hiring Manager, and Career Coach.
 
+If the industry is "Auto-Detect" or the job description is empty, aggressively analyze the resume content to infer the candidate's primary profession, target job title, and seniority level.
+Base ALL scoring, keyword gap analysis, and recommendations strictly on the standards expected for this inferred role.
+
 Analyze the provided resume content thoroughly.
 
 Provide:
-1. Overall ATS Score (0-100)
+1. Inferred Role (string)
+2. Overall ATS Score (0-100)
 2. Recruiter Score (0-100)
 3. Industry Relevance Score
 4. Formatting Score
@@ -88,6 +92,7 @@ function normalizeAnalysis(data, fallback, atsRisks) {
 
 function fallbackAnalysis(fallback, atsRisks, aiError = '') {
   return {
+    inferredRole: 'Auto-Detected Role (Fallback)',
     scores: {
       atsScore: fallback.atsScore,
       recruiterScore: fallback.recruiterScore,

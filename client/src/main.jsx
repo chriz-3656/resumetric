@@ -23,7 +23,7 @@ const apiBase = import.meta.env.VITE_API_BASE_URL || '';
 // In production on Vercel, we must use relative paths to avoid localhost hardcoding.
 const apiRoot = window.location.hostname === 'localhost' ? apiBase : '';
 
-const industries = ['Cybersecurity', 'Accounting', 'Finance', 'Marketing', 'Software Engineering', 'Data Science', 'Cloud Computing', 'Networking', 'HR', 'Project Management'];
+const industries = ['Auto-Detect', 'Cybersecurity', 'Accounting', 'Finance', 'Marketing', 'Software Engineering', 'Data Science', 'Cloud Computing', 'Networking', 'HR', 'Project Management'];
 const hallOfFame = [
   { site: 'CloudSec Lead', score: 94, tier: 'Top' },
   { site: 'Finance Analyst', score: 91, tier: 'Top' },
@@ -70,7 +70,7 @@ function App() {
 
 function LandingPage() {
   const [file, setFile] = useState(null);
-  const [industry, setIndustry] = useState('Software Engineering');
+  const [industry, setIndustry] = useState('Auto-Detect');
   const [jobDescription, setJobDescription] = useState('');
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -493,7 +493,7 @@ function Dashboard({ analysis, onReport, onRewrite }) {
       <div className="metric-overview">
         <MetricCard label="ATS Index" value={scores.atsScore} />
         <MetricCard label="Recruiter Confidence" value={scores.recruiterScore} />
-        <MetricCard label="Alignment Match" value={scores.matchScore} />
+        <MetricCard label="Inferred Role" value={data.inferredRole || industry} isText />
         <MetricCard label="System Verdict" value={data.finalVerdict || 'N/A'} isText />
       </div>
       <div className="visual-diagnostics">
