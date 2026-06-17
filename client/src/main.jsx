@@ -443,7 +443,7 @@ function Header({ session, menuOpen, setMenuOpen }) {
         
         {session ? (
           <>
-            <Link to="/dashboard" style={{ color: 'var(--signal-green)' }}>Dashboard</Link>
+            <Link to="/dashboard" className="nav-action-btn logged-in">Dashboard</Link>
             <div className="status-indicator">
               <span className="pulse-dot" />
               <span className="status-label">Auth Active</span>
@@ -451,7 +451,7 @@ function Header({ session, menuOpen, setMenuOpen }) {
           </>
         ) : (
           <>
-            <Link to="/login">Login</Link>
+            <Link to="/login" className="nav-action-btn">Initialize Login</Link>
             <div className="status-indicator">
               <span className="pulse-dot" style={{ animation: 'none', opacity: 0.2 }} />
               <span className="status-label" style={{ color: 'var(--text-dim)' }}>Guest Mode</span>
