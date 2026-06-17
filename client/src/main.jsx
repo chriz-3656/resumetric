@@ -15,6 +15,9 @@ import {
 import { Radar, Doughnut, Bar } from 'react-chartjs-2';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import './styles.css';
+import { supabase } from './supabase.js';
+import { LoginPage, SignUpPage, ForgotPasswordPage, ResetPasswordPage } from './AuthPages.jsx';
+import { DashboardPage } from './DashboardPage.jsx';
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement);
 
@@ -42,6 +45,23 @@ function ScrollToTop() {
 function App() {
   const [booting, setBooting] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [session, setSession] = useState(null);
+
+  React.useEffect(() => {
+    if (supabase) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setSession(session);
+      });
+
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session);
+      });
+
+      return () => subscription.unsubscribe();
+    }
+  }, []);
 
   React.useEffect(() => {
     const timer = setTimeout(() => setBooting(false), 2400);
@@ -54,13 +74,18 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <div className="app-shell">
-        <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        <Header session={session} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<LandingPage session={session} />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/dashboard" element={<DashboardPage session={session} />} />
         </Routes>
         <Footer />
       </div>
@@ -68,7 +93,7 @@ function App() {
   );
 }
 
-function LandingPage() {
+function LandingPage({ session }) {
   const [file, setFile] = useState(null);
   const [industry, setIndustry] = useState('Auto-Detect');
   const [jobDescription, setJobDescription] = useState('');
@@ -99,9 +124,15 @@ function LandingPage() {
     form.append('industry', industry);
     form.append('jobDescription', jobDescription);
     
+    const headers = {};
+    if (session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.access_token}`;
+    }
+
     try {
       const response = await fetch(`${apiRoot}/api/analyze`, {
         method: 'POST',
+        headers,
         body: form
       });
       const data = await response.json();
@@ -356,7 +387,7 @@ function ResumeHeatmap({ heatmapData = [] }) {
   );
 }
 
-function Header({ menuOpen, setMenuOpen }) {
+function Header({ session, menuOpen, setMenuOpen }) {
   return (
     <header className="nav-container">
       <Link className="brand" to="/" aria-label="ResuMetric Professional">
@@ -374,10 +405,24 @@ function Header({ menuOpen, setMenuOpen }) {
         <Link to="/">Analysis</Link>
         <Link to="/about">About</Link>
         <Link to="/blog">Blog</Link>
-        <div className="status-indicator">
-          <span className="pulse-dot" />
-          <span className="status-label">System Active</span>
-        </div>
+        
+        {session ? (
+          <>
+            <Link to="/dashboard" style={{ color: 'var(--signal-green)' }}>Dashboard</Link>
+            <div className="status-indicator">
+              <span className="pulse-dot" />
+              <span className="status-label">Auth Active</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <Link to="/login">Login</Link>
+            <div className="status-indicator">
+              <span className="pulse-dot" style={{ animation: 'none', opacity: 0.2 }} />
+              <span className="status-label" style={{ color: 'var(--text-dim)' }}>Guest Mode</span>
+            </div>
+          </>
+        )}
       </nav>
     </header>
   );

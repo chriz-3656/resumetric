@@ -5,18 +5,20 @@ A high-performance, AI-powered Resume ATS Analyzer and Career Intelligence platf
 ## Key Features
 
 - **Dual-AI Engine**: Powered by Groq LPU (Llama-3) for sub-second diagnostics, with Google Gemini 1.5 Flash as a robust fallback and rewrite engine.
+- **Enterprise Authentication**: Full Supabase Auth integration (Email, Google, GitHub OAuth, Password Recovery) with secure session management.
+- **Protected User Dashboard**: Authenticated users can permanently save and access their analysis history, bypassing the standard guest auto-purge.
 - **Dynamic Role Auto-Detection**: Automatically infers the candidate's target job title, seniority, and industry from the resume text to provide highly contextualized scoring and keyword gap analysis.
 - **ATS Visual Simulation**: Automated diagnostics for structural and formatting risks.
 - **Performance Heatmap**: Actionable visual highlights of resume strengths and critical gaps.
-- **Privacy-First Architecture**: Automated 60-minute TTL data purge via MongoDB with transient-memory processing.
+- **Privacy-First Architecture**: Automated 60-minute TTL data purge via MongoDB with transient-memory processing for guests.
 - **Enterprise PDF Reporting**: Professional diagnostic synthesis for offline review.
-- **Multi-Page Routing**: Clean client-side navigation (`/about`, `/blog`, `/privacy`, `/terms`).
+- **Multi-Page Routing**: Clean client-side navigation (`/about`, `/blog`, `/privacy`, `/terms`, `/login`, `/dashboard`).
 
 ## Tech Stack
 
 - **Frontend**: React (Vite), Chart.js, React Router, IBM Plex Mono.
 - **Backend**: Node.js, Express.js.
-- **Database**: MongoDB (Transient analysis storage with TTL).
+- **Database**: MongoDB (Analysis storage), Supabase (Authentication).
 - **AI Pipelines**: Groq SDK, Google Gemini API.
 - **Document Parsing**: `pdf-parse`, `mammoth`.
 
@@ -28,7 +30,7 @@ npm install
 
 # 2. Configure environment variables
 cp .env.example .env
-# Edit .env and add your GROQ_API_KEY, GEMINI_API_KEY, and MONGODB_URI
+# Edit .env and add your GROQ_API_KEY, GEMINI_API_KEY, MONGODB_URI, and VITE_SUPABASE keys.
 
 # 3. Start the development server
 npm run dev

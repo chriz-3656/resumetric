@@ -25,11 +25,8 @@ const ResumeAnalysisSchema = new mongoose.Schema({
   parsedSections: Object,
   jobDescription: String,
   analysis: Object,
-  createdAt: { 
-    type: Date, 
-    default: Date.now, 
-    expires: 3600 // Auto-delete after 1 hour (3600 seconds)
-  }
+  createdAt: { type: Date, default: Date.now },
+  expireAt: { type: Date, index: { expires: '0s' } }
 });
 
 export const ResumeAnalysis = mongoose.models.ResumeAnalysis || mongoose.model('ResumeAnalysis', ResumeAnalysisSchema);

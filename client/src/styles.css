@@ -829,8 +829,194 @@ button, input, select, textarea {
   line-height: 1.6;
 }
 
+/* Authentication Pages */
+.auth-page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.auth-subtitle {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.auth-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 3rem;
+}
+
+.auth-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.password-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.password-header label {
+  margin-bottom: 0;
+}
+
+.forgot-link {
+  font-size: 0.7rem;
+  color: var(--signal-amber);
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.success-module {
+  color: var(--signal-green);
+  font-size: 0.8rem;
+  padding: 1rem;
+  border: 1px solid var(--signal-green);
+  background: rgba(0, 230, 118, 0.05);
+}
+
+.oauth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  margin: 2rem 0;
+}
+
+.oauth-divider::before,
+.oauth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border);
+}
+
+.oauth-divider span {
+  padding: 0 1rem;
+}
+
+.oauth-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.auth-footer {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.auth-footer a {
+  color: var(--signal-green);
+  text-decoration: none;
+  font-weight: 700;
+  margin-left: 0.5rem;
+}
+
+/* User Dashboard */
+.dashboard-page {
+  max-width: 1200px;
+}
+
+.dashboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.operator-id {
+  font-family: var(--mono);
+  color: var(--signal-green);
+  font-size: 0.9rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--signal-green);
+  background: rgba(0, 230, 118, 0.05);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2rem;
+}
+
+.dashboard-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2rem;
+}
+
+.dashboard-panel h2 {
+  font-size: 1rem;
+  margin: 0 0 2rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: var(--panel);
+  border: 1px solid var(--border-strong);
+  transition: border-color 0.2s;
+}
+
+.history-item:hover {
+  border-color: var(--signal-green);
+}
+
+.history-meta strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.history-meta span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.history-score {
+  text-align: right;
+}
+
+.history-score span {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.history-score strong {
+  font-size: 1.5rem;
+  color: var(--signal-green);
+}
+
+.profile-details {
+  display: grid;
+  gap: 1rem;
+}
+
 @media (max-width: 900px) {
-  .section-grid { grid-template-columns: 1fr; }
+  .section-grid, .dashboard-grid { grid-template-columns: 1fr; }
   .page-header h1 { font-size: 2.5rem; }
 }
 

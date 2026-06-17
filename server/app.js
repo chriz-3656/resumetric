@@ -14,6 +14,7 @@ import { analyzeWithGroq } from './services/groq.js';
 import { createReportPdf } from './services/report.js';
 import { detectAtsRisks, extractSections, keywordLibrary, scoreFallback } from './services/ats.js';
 import { ResumeAnalysis, connectDB } from './services/mongodb.js';
+import { getUserFromRequest } from './services/supabase.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -61,6 +62,7 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
       jobDescription: z.string().optional().default('')
     }).parse(req.body);
 
+    const user = await getUserFromRequest(req);
     const resumeText = await parseResumeFile(req.file);
     const parsedSections = extractSections(resumeText);
     const atsRisks = detectAtsRisks(resumeText, parsedSections);
@@ -70,7 +72,6 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
     let engine = 'Groq/Llama-3';
 
     try {
-      // Primary: Groq for ultra-low latency
       analysis = await analyzeWithGroq({
         resumeText,
         industry: body.industry,
@@ -82,7 +83,6 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
       console.warn('Groq failed, falling back to Gemini:', groqError.message);
       engine = 'Gemini/Flash';
       try {
-        // Fallback: Gemini
         analysis = await analyzeResume({
           resumeText,
           industry: body.industry,
@@ -108,8 +108,8 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
       analysis: { ...analysis, engine }
     };
 
-    // Store in MongoDB with 1-hour TTL
-    const doc = await new ResumeAnalysis({
+    const docOptions = {
+      userId: user ? user.id : undefined,
       fileName: req.file.originalname,
       fileType: req.file.mimetype,
       industry: body.industry,
@@ -117,7 +117,13 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
       parsedSections,
       jobDescription: body.jobDescription,
       analysis: payload.analysis
-    }).save();
+    };
+
+    if (!user) {
+      docOptions.expireAt = new Date(Date.now() + 3600 * 1000); // 1 hour for guests
+    }
+
+    const doc = await new ResumeAnalysis(docOptions).save();
     
     payload.id = doc._id;
     res.json(payload);
@@ -161,7 +167,24 @@ app.post('/api/report', async (req, res, next) => {
 
 app.get('/api/history', async (req, res, next) => {
   try {
-    res.json({ analyses: [] });
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'Authentication required' });
+    
+    await connectDB();
+    const analyses = await ResumeAnalysis.find({ userId: user.id })
+      .select('fileName industry analysis createdAt')
+      .sort({ createdAt: -1 })
+      .limit(50);
+
+    res.json({ 
+      analyses: analyses.map(a => ({
+        id: a._id,
+        file_name: a.fileName,
+        industry: a.industry,
+        analysis: a.analysis,
+        created_at: a.createdAt
+      }))
+    });
   } catch (error) {
     next(error);
   }
