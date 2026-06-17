@@ -84,6 +84,17 @@ export function DashboardPage({ session }) {
         <div className="dashboard-panel side-panel">
           <h2>Security Clearance</h2>
           <div className="profile-details">
+            <div className="profile-header">
+              {session.user.user_metadata?.avatar_url ? (
+                <img src={session.user.user_metadata.avatar_url} alt="Operator Avatar" className="operator-avatar" />
+              ) : (
+                <div className="operator-avatar fallback">{session.user.email?.charAt(0).toUpperCase()}</div>
+              )}
+              <div className="profile-identity">
+                <span className="spec-label">Operator</span>
+                <span className="spec-value">{session.user.user_metadata?.full_name || session.user.email}</span>
+              </div>
+            </div>
             <div className="spec-item"><span className="spec-label">User ID</span><span className="spec-value">{session.user.id.split('-')[0]}***</span></div>
             <div className="spec-item"><span className="spec-label">Status</span><span className="spec-value" style={{color: 'var(--signal-green)'}}>ACTIVE</span></div>
             <div className="spec-item"><span className="spec-label">Storage</span><span className="spec-value">Permanent (Auth)</span></div>
