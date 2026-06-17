@@ -213,9 +213,44 @@ function LandingPage({ session }) {
         <>
           <AboutSection />
           <HallOfFame />
+          <TestimonialSlider />
         </>
       )}
     </main>
+  );
+}
+
+const testimonials = [
+  { quote: "ResuMetric's AI found keyword gaps I completely missed. My callback rate doubled in two weeks.", author: "Sarah J.", role: "Senior Frontend Engineer" },
+  { quote: "The ATS visual simulation is terrifyingly accurate. It highlighted exactly why my PDF was being rejected.", author: "David T.", role: "Product Manager" },
+  { quote: "Finally, a tool that gives actionable data instead of generic advice. The Groq engine is incredibly fast.", author: "Elena M.", role: "Data Scientist" },
+  { quote: "I optimized my resume using the heatmap insights and landed interviews at two FAANG companies.", author: "Michael R.", role: "Cloud Architect" },
+  { quote: "The recruiter bias emulation helped me reframe my experience to focus on impact metrics.", author: "Priya K.", role: "Marketing Director" }
+];
+
+function TestimonialSlider() {
+  const scrollItems = [...testimonials, ...testimonials]; // Duplicate for seamless loop
+
+  return (
+    <section className="testimonials-section">
+      <div className="section-header text-center">
+        <span className="header-tag">Operator Feedback</span>
+        <h2>Proven Field Results</h2>
+      </div>
+      <div className="slider-container">
+        <div className="slider-track">
+          {scrollItems.map((item, index) => (
+            <div key={index} className="testimonial-card">
+              <p className="testimonial-quote">"{item.quote}"</p>
+              <div className="testimonial-author">
+                <strong>{item.author}</strong>
+                <span>{item.role}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
