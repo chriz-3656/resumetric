@@ -1109,6 +1109,12 @@ button, input, select, textarea {
   color: var(--text-muted);
 }
 
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .history-score {
   text-align: right;
 }
@@ -1124,6 +1130,25 @@ button, input, select, textarea {
 .history-score strong {
   font-size: 1.5rem;
   color: var(--signal-green);
+}
+
+.delete-btn {
+  background: transparent;
+  color: var(--signal-red);
+  border: 1px solid var(--border);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 59, 48, 0.1);
+  border-color: var(--signal-red);
 }
 
 .profile-details {

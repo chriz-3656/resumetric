@@ -114,6 +114,8 @@ function LandingPage({ session }) {
 
   async function analyze() {
     if (!file) return setError('Upload a PDF or DOCX resume first.');
+    if (file.size > 8 * 1024 * 1024) return setError('File exceeds the 8MB limit. Please compress your document.');
+    
     setError('');
     setLoading(true);
     setProgress(5);
@@ -135,6 +137,11 @@ function LandingPage({ session }) {
         headers,
         body: form
       });
+      
+      if (response.status === 429) {
+        throw new Error('SYSTEM COOLDOWN: Rate limit exceeded. Please wait 60 seconds before initiating another scan.');
+      }
+      
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Analysis failed');
       

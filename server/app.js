@@ -190,6 +190,24 @@ app.get('/api/history', async (req, res, next) => {
   }
 });
 
+app.delete('/api/history/:id', async (req, res, next) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'Authentication required' });
+    
+    await connectDB();
+    const result = await ResumeAnalysis.findOneAndDelete({ 
+      _id: req.params.id, 
+      userId: user.id 
+    });
+
+    if (!result) return res.status(404).json({ error: 'Record not found or unauthorized' });
+    res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
 if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
   const distPath = path.resolve(__dirname, '../client/dist');
   app.use(express.static(distPath));

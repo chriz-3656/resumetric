@@ -41,6 +41,25 @@ export function DashboardPage({ session }) {
     navigate('/login');
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to permanently delete this analysis?')) return;
+    
+    try {
+      const apiRoot = window.location.hostname === 'localhost' ? import.meta.env.VITE_API_BASE_URL : '';
+      const response = await fetch(`${apiRoot}/api/history/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete record');
+      setHistory(prev => prev.filter(item => item.id !== id));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   if (!session) return null;
 
   return (
@@ -71,9 +90,12 @@ export function DashboardPage({ session }) {
                     <strong>{item.file_name}</strong>
                     <span>{new Date(item.created_at).toLocaleDateString()} | {item.industry}</span>
                   </div>
-                  <div className="history-score">
-                    <span>ATS Index:</span>
-                    <strong>{item.analysis?.scores?.atsScore || 'N/A'}</strong>
+                  <div className="history-actions">
+                    <div className="history-score">
+                      <span>ATS Index:</span>
+                      <strong>{item.analysis?.scores?.atsScore || 'N/A'}</strong>
+                    </div>
+                    <button className="delete-btn" onClick={() => handleDelete(item.id)} title="Purge Record">✕</button>
                   </div>
                 </li>
               ))}
