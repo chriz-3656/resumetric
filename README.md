@@ -52,7 +52,10 @@ A high-performance, AI-powered Resume ATS Analyzer and Career Intelligence platf
 - **Testimonial Slider**: Implemented a CSS-only infinite marquee slider for operator feedback.
 - **Custom Branding**: Added a bespoke SVG favicon (`favicon.svg`) and unified the "ResuMetric" identity across all meta tags.
 
-### Fixed
+### Fixed / Migrated
+- **Total Groq Migration**: Migrated the `Cover Letter Generator` and `Resume Rewrite` engines from Google Gemini to Groq LPU (Llama-3) to completely bypass Gemini API `404/400` availability errors and significantly reduce response latency.
+- **Zod Validation Robustness**: Implemented strict payload fallbacks in the frontend to ensure `inferredRole` and `resumeText` are never transmitted as `undefined`, resolving `400 Bad Request` schema rejections.
+- **Backend Syntax Resolution**: Resolved an unclosed function block in the Groq service layer that was causing fatal `500 Internal Server Errors` during the initial resume ingestion.
 - **Vite Production Routing**: Resolved `localhost:8080` connection refusal errors on live deployment by implementing dynamic relative pathing (`apiRoot`) for API calls.
 - **Chart.js Rendering Crash**: Fixed the "point is not a registered element" fatal error by explicitly registering `PointElement` and `LineElement` in the main React entry point.
 - **Express Rate-Limiter (Vercel)**: Resolved `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR` by configuring Express to `trust proxy`, allowing accurate IP tracking behind Vercel's edge network.
