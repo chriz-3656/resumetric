@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
-const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash-latest';
 
 const systemPrompt = `Act as an elite Executive Career Coach and Professional Copywriter.
 Generate a highly targeted, persuasive cover letter based on the provided resume text, industry, and job description.
