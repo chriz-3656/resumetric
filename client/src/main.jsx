@@ -668,17 +668,28 @@ function Coach({ analysis, rewrite }) {
 
   async function handleCoverLetter() {
     setLoadingCL(true);
+    setCoverLetter(null);
     try {
       const apiRoot = window.location.hostname === 'localhost' ? import.meta.env.VITE_API_BASE_URL : '';
+      const payload = { 
+        resumeText: analysis.resumeText || '', 
+        industry: data.inferredRole || analysis.industry || 'General', 
+        analysis: data || {} 
+      };
+      
       const response = await fetch(`${apiRoot}/api/coverletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resumeText: analysis.resumeText, industry: data.inferredRole, analysis: data })
+        body: JSON.stringify(payload)
       });
+      
       const resData = await response.json();
+      if (!response.ok) throw new Error(resData.error || 'Failed to generate cover letter');
+      
       setCoverLetter(resData.coverLetter);
     } catch (err) {
       console.error(err);
+      setCoverLetter(`Error generating cover letter: ${err.message}`);
     } finally {
       setLoadingCL(false);
     }
