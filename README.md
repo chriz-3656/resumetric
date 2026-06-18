@@ -20,13 +20,17 @@ A high-performance, AI-powered Resume ATS Analyzer and Career Intelligence platf
 - **Enterprise Authentication (Supabase)**
   - Full OAuth (Google, GitHub) and Email/Password integration with secure session management.
   - Includes Password Recovery flows and strict clearance validation.
+- **AI Cover Letter Generator**
+  - Instantly drafts highly targeted, persuasive cover letters tailored to the auto-detected role and the specific strengths/weaknesses of the candidate's ATS profile.
+- **Public Profile Sharing**
+  - Generates secure, read-only public URLs (`/r/:id`) to share ATS scores and heatmaps with mentors or recruiters while automatically stripping out raw PII text.
+- **Interactive PDF Reporting**: Generates a downloadable, beautifully styled `pdfkit` report matching the platform's Industrial dark theme.
 - **Protected User Dashboard**
-  - Authenticated operators receive a permanent archive of their analysis history.
+  - Authenticated operators receive a permanent archive of their analysis history with complete **GDPR-compliant manual deletion** controls.
   - Guests operate under a strict **1-Hour Auto-Purge TTL** via MongoDB for maximum privacy.
 - **Actionable Diagnostics**
   - **Performance Heatmap**: Visual highlighting of strong, average, and critically weak segments within the resume text.
   - **ATS Visual Simulation**: Automated diagnostics for structural and formatting risks.
-- **Enterprise PDF Reporting**: Professional diagnostic synthesis available for offline review.
 
 ---
 
@@ -46,6 +50,12 @@ A high-performance, AI-powered Resume ATS Analyzer and Career Intelligence platf
 ## 📜 Changelog & Recent Fixes (v1.2.0)
 
 ### Added
+- **AI Cover Letter Generator**: Integrated Groq/Gemini to draft contextual cover letters based on the resume's ATS gaps.
+- **Public Share Links**: Added secure routing (`/api/share/:id`) to share read-only dashboards with stripped PII.
+- **GDPR Dashboard Deletion**: Implemented user-controlled history purging (`DELETE /api/history/:id`).
+- **Pre-Upload Validation**: Added strict client-side file size validation (8MB limit) to prevent browser crashing on large PDFs.
+- **Rate Limit UX**: Added a dedicated UI warning ("SYSTEM COOLDOWN") when users hit the Express 429 rate limit.
+- **Styled PDF Exports**: Overhauled the `pdfkit` generator to produce a dark-themed, Industrial-style PDF matching the website.
 - **Multi-Page Routing**: Migrated from a single-page app to a robust client-side routed application featuring `/about`, `/blog`, `/privacy`, `/terms`, and `/dashboard`.
 - **Supabase Authentication**: Integrated `@supabase/supabase-js` for complete user lifecycle management.
 - **Dynamic Heatmaps**: Added UI to visually segment and color-code resume text based on AI impact assessment.
