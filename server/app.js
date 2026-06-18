@@ -9,8 +9,8 @@ import rateLimit from 'express-rate-limit';
 import multer from 'multer';
 import { z } from 'zod';
 import { parseResumeFile } from './services/parser.js';
-import { analyzeResume, rewriteResume } from './services/gemini.js';
-import { analyzeWithGroq } from './services/groq.js';
+import { analyzeResume } from './services/gemini.js';
+import { analyzeWithGroq, rewriteWithGroq } from './services/groq.js';
 import { generateCoverLetter } from './services/coverletter.js';
 import { createReportPdf } from './services/report.js';
 import { detectAtsRisks, extractSections, keywordLibrary, scoreFallback } from './services/ats.js';
@@ -141,7 +141,7 @@ app.post('/api/rewrite', async (req, res, next) => {
       targetRole: z.string().optional().default(''),
       jobDescription: z.string().optional().default('')
     }).parse(req.body);
-    const result = await rewriteResume(body);
+    const result = await rewriteWithGroq(body);
     res.json(result);
   } catch (error) {
     next(error);

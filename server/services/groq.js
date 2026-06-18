@@ -56,5 +56,34 @@ export async function analyzeWithGroq({ resumeText, industry, jobDescription, pa
     temperature: 0.2
   });
 
+export async function rewriteWithGroq({ resumeText, industry, targetRole, jobDescription }) {
+  if (!groq) throw new Error('Groq API key not configured');
+
+  const systemRewritePrompt = `Rewrite this resume for ATS compatibility and recruiter clarity. Return strictly in JSON format matching this schema:
+{
+  "rewrittenSummary": string,
+  "bulletImprovements": [string],
+  "optimizedSkills": [string],
+  "rewrittenResume": string,
+  "rewriteNotes": string
+}`;
+
+  const prompt = `Industry: ${industry}
+Target role: ${targetRole}
+Job description: ${jobDescription}
+Resume:
+${resumeText}`;
+
+  const completion = await groq.chat.completions.create({
+    messages: [
+      { role: 'system', content: systemRewritePrompt },
+      { role: 'user', content: prompt }
+    ],
+    model: modelName,
+    response_format: { type: 'json_object' },
+    temperature: 0.35
+  });
+
   return JSON.parse(completion.choices[0].message.content);
 }
+

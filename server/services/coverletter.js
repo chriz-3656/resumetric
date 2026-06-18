@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from 'groq-sdk';
 
-const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
-const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash-latest';
+const groq = process.env.GROQ_API_KEY ? new Groq({ apiKey: process.env.GROQ_API_KEY }) : null;
+const modelName = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 
 const systemPrompt = `Act as an elite Executive Career Coach and Professional Copywriter.
 Generate a highly targeted, persuasive cover letter based on the provided resume text, industry, and job description.
@@ -12,13 +12,14 @@ The cover letter must:
 4. Use a confident, results-oriented tone (avoid passive language or cliches like "I am writing to apply").
 5. Do NOT include placeholder brackets like [Your Name] or [Company Name] if the information is missing; instead, write around it smoothly.
 
-Return ONLY the raw text of the cover letter. Do not include markdown formatting like \`\`\` or introductory text.`;
+Return your response strictly in JSON format matching this exact schema:
+{
+  "coverLetter": string
+}`;
 
 export async function generateCoverLetter({ resumeText, industry, jobDescription, analysis }) {
-  if (!genAI) throw new Error('Google Gemini API key is not configured for cover letter generation.');
+  if (!groq) throw new Error('Groq API key is not configured for cover letter generation.');
 
-  const model = genAI.getGenerativeModel({ model: modelName });
-  
   const prompt = `
     Context:
     Target Industry: ${industry}
@@ -34,10 +35,15 @@ export async function generateCoverLetter({ resumeText, industry, jobDescription
     Write the cover letter now:
   `;
 
-  const result = await model.generateContent([
-    { text: systemPrompt },
-    { text: prompt }
-  ]);
+  const completion = await groq.chat.completions.create({
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: prompt }
+    ],
+    model: modelName,
+    response_format: { type: 'json_object' },
+    temperature: 0.5
+  });
 
-  return { coverLetter: result.response.text().trim() };
+  return JSON.parse(completion.choices[0].message.content);
 }
