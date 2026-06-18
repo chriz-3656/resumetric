@@ -56,6 +56,9 @@ export async function analyzeWithGroq({ resumeText, industry, jobDescription, pa
     temperature: 0.2
   });
 
+  return JSON.parse(completion.choices[0].message.content);
+}
+
 export async function rewriteWithGroq({ resumeText, industry, targetRole, jobDescription }) {
   if (!groq) throw new Error('Groq API key not configured');
 
