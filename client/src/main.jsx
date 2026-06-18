@@ -13,7 +13,7 @@ import {
   LineElement
 } from 'chart.js';
 import { Radar, Doughnut, Bar } from 'react-chartjs-2';
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation, useParams } from 'react-router-dom';
 import './styles.css';
 import { supabase } from './supabase.js';
 import { LoginPage, SignUpPage, ForgotPasswordPage, ResetPasswordPage } from './AuthPages.jsx';
@@ -86,10 +86,45 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={<DashboardPage session={session} />} />
+          <Route path="/r/:id" element={<SharePage />} />
         </Routes>
         <Footer />
       </div>
     </BrowserRouter>
+  );
+}
+
+function SharePage() {
+  const { id } = useParams();
+  const [analysis, setAnalysis] = useState(null);
+  const [error, setError] = useState('');
+
+  React.useEffect(() => {
+    async function fetchShared() {
+      try {
+        const response = await fetch(`${apiRoot}/api/share/${id}`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        setAnalysis({ analysis: data.analysis });
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+    fetchShared();
+  }, [id]);
+
+  if (error) return <main className="static-page"><div className="error-module">{error}</div></main>;
+  if (!analysis) return <main className="static-page"><div className="system-status"><span className="pulse-dot"/><span>Loading Profile...</span></div></main>;
+
+  return (
+    <main>
+      <section className="page-header text-center" style={{marginTop: '4rem'}}>
+        <span className="header-tag">Public Profile</span>
+        <h1>Operator Analytics</h1>
+      </section>
+      <Dashboard analysis={analysis} readOnly />
+      <ResumeHeatmap heatmapData={analysis.analysis.heatmapData} />
+    </main>
   );
 }
 
@@ -556,7 +591,7 @@ function Uploader({ file, setFile }) {
   );
 }
 
-function Dashboard({ analysis, onReport, onRewrite }) {
+function Dashboard({ analysis, onReport, onRewrite, readOnly = false }) {
   const data = analysis.analysis;
   const scores = data.scores || {};
   const scoreItems = [
@@ -587,10 +622,12 @@ function Dashboard({ analysis, onReport, onRewrite }) {
         <div className="data-panel main-panel">
           <div className="panel-header">
             <h2>Diagnostic Dashboard</h2>
-            <div className="action-set">
-              <button className="secondary-action" onClick={onRewrite}>Optimize Copy</button>
-              <button className="secondary-action" onClick={onReport}>Generate PDF</button>
-            </div>
+            {!readOnly && (
+              <div className="action-set">
+                <button className="secondary-action" onClick={onRewrite}>Optimize Copy</button>
+                <button className="secondary-action" onClick={onReport}>Generate PDF</button>
+              </div>
+            )}
           </div>
           <div className="chart-layout">
             <div className="chart-item">
@@ -626,6 +663,27 @@ function Dashboard({ analysis, onReport, onRewrite }) {
 
 function Coach({ analysis, rewrite }) {
   const data = analysis.analysis;
+  const [coverLetter, setCoverLetter] = useState(null);
+  const [loadingCL, setLoadingCL] = useState(false);
+
+  async function handleCoverLetter() {
+    setLoadingCL(true);
+    try {
+      const apiRoot = window.location.hostname === 'localhost' ? import.meta.env.VITE_API_BASE_URL : '';
+      const response = await fetch(`${apiRoot}/api/coverletter`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resumeText: analysis.resumeText, industry: data.inferredRole, analysis: data })
+      });
+      const resData = await response.json();
+      setCoverLetter(resData.coverLetter);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingCL(false);
+    }
+  }
+
   return (
     <section className="consultation-section">
       <div className="consult-panel">
@@ -635,6 +693,15 @@ function Coach({ analysis, rewrite }) {
           <DataTable bare title="Executive Recommendations" items={data.professionalRecommendations} />
           <DataTable bare title="Market Gap Analysis" items={data.experienceGapAnalysis} />
         </div>
+        
+        <div className="panel-header" style={{marginTop: '3rem'}}>
+          <h2>Cover Letter Generation</h2>
+          <button className="secondary-action" onClick={handleCoverLetter} disabled={loadingCL}>
+            {loadingCL ? 'Drafting...' : 'Generate Letter'}
+          </button>
+        </div>
+        {loadingCL && <div className="system-status"><span className="pulse-dot" /><span>Synthesizing narrative...</span></div>}
+        {coverLetter && <div className="code-view" style={{marginTop: '1rem'}}><pre>{coverLetter}</pre></div>}
       </div>
       <div className="consult-panel">
         <div className="panel-header"><h2>AI Optimization Engine</h2></div>

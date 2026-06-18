@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { parseResumeFile } from './services/parser.js';
 import { analyzeResume, rewriteResume } from './services/gemini.js';
 import { analyzeWithGroq } from './services/groq.js';
+import { generateCoverLetter } from './services/coverletter.js';
 import { createReportPdf } from './services/report.js';
 import { detectAtsRisks, extractSections, keywordLibrary, scoreFallback } from './services/ats.js';
 import { ResumeAnalysis, connectDB } from './services/mongodb.js';
@@ -142,6 +143,41 @@ app.post('/api/rewrite', async (req, res, next) => {
     }).parse(req.body);
     const result = await rewriteResume(body);
     res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/api/coverletter', async (req, res, next) => {
+  try {
+    const body = z.object({
+      resumeText: z.string().min(50),
+      industry: z.string(),
+      jobDescription: z.string().optional().default(''),
+      analysis: z.record(z.any())
+    }).parse(req.body);
+    const result = await generateCoverLetter(body);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/share/:id', async (req, res, next) => {
+  try {
+    await connectDB();
+    const doc = await ResumeAnalysis.findById(req.params.id)
+      .select('fileName industry analysis createdAt'); // Exclude raw resumeText to protect PII
+      
+    if (!doc) return res.status(404).json({ error: 'Shared report not found or expired.' });
+    
+    res.json({
+      id: doc._id,
+      fileName: doc.fileName,
+      industry: doc.industry,
+      analysis: doc.analysis,
+      createdAt: doc.createdAt
+    });
   } catch (error) {
     next(error);
   }
