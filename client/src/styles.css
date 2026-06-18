@@ -1164,15 +1164,38 @@ button, input, select, textarea {
 }
 
 @media (max-width: 900px) {
-  .section-grid, .dashboard-grid { grid-template-columns: 1fr; }
-  .page-header h1 { font-size: 2.5rem; }
-}
-
-@media (max-width: 900px) {
-  .hero-section, .visual-diagnostics, .data-grids, .consultation-section, .benchmark-grid, .metric-overview {
+  /* Layout Grids */
+  .hero-section, 
+  .visual-diagnostics, 
+  .data-grids, 
+  .consultation-section, 
+  .benchmark-grid, 
+  .metric-overview,
+  .section-grid,
+  .dashboard-grid,
+  .about-grid,
+  .form-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Typography */
   .hero-content h1 { font-size: 3rem; }
+  .page-header h1 { font-size: 2.5rem; }
+
+  /* Specific Components */
   .chart-layout { grid-template-columns: 1fr; }
   .footer-main { flex-direction: column; gap: 3rem; }
+  
+  /* Authentication */
+  .auth-container { padding: 1.5rem; }
+  .oauth-grid { grid-template-columns: 1fr; }
+  .password-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+
+  /* Navigation & Top Bar */
+  .nav-container { padding: 1rem; flex-wrap: wrap; }
+  .nav-links { width: 100%; justify-content: space-between; margin-top: 1rem; gap: 1rem; }
+  .status-indicator { width: 100%; justify-content: center; }
+  
+  /* Splash Screen */
+  .splash-logo-img { width: 48px; height: 48px; }
 }
