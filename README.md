@@ -1,5 +1,7 @@
 # ResuMetric | Enterprise Profile Analytics
 
+![ResuMetric AI Resume ATS Analyzer preview](client/public/preview.png)
+
 [![Status: Active](https://img.shields.io/badge/Status-Active-00E676?style=flat-square)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-333333?style=flat-square)](#)
 [![Version: 1.2.0-stable](https://img.shields.io/badge/Version-1.2.0--stable-FFB800?style=flat-square)](#)
