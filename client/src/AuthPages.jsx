@@ -6,7 +6,7 @@ function AuthLayout({ title, subtitle, children }) {
   return (
     <main className="static-page auth-page">
       <section className="page-header">
-        <span className="header-tag">Authentication Module</span>
+        <span className="header-tag">Account</span>
         <h1>{title}</h1>
         <p className="auth-subtitle">{subtitle}</p>
       </section>
@@ -52,26 +52,26 @@ export function LoginPage() {
   };
 
   return (
-    <AuthLayout title="Operator Login" subtitle="Access your ResuMetric Enterprise profile.">
+    <AuthLayout title="Welcome back" subtitle="Sign in to access your dashboard and analysis history.">
       <form onSubmit={handleLogin} className="auth-form">
-        {error && <div className="error-module">ERROR: {error}</div>}
+        {error && <div className="error-module">{error}</div>}
         <div className="input-group">
           <label htmlFor="email">Email Address</label>
-          <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="operator@domain.com" />
+          <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com" />
         </div>
         <div className="input-group">
           <div className="password-header">
             <label htmlFor="password">Password</label>
-            <Link to="/forgot-password" className="forgot-link">Forgot Password?</Link>
+            <Link to="/forgot-password" className="forgot-link">Forgot password?</Link>
           </div>
           <input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••" />
         </div>
         <button type="submit" className="primary-action" disabled={loading}>
-          {loading ? 'Authenticating...' : 'Sign In'}
+          {loading ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
       
-      <div className="oauth-divider"><span>OR INITIALIZE VIA</span></div>
+      <div className="oauth-divider"><span>or continue with</span></div>
       
       <div className="oauth-grid">
         <button className="secondary-action" onClick={() => handleOAuth('google')}>Continue with Google</button>
@@ -79,7 +79,7 @@ export function LoginPage() {
       </div>
 
       <div className="auth-footer">
-        <span>NO ACTIVE CLEARANCE?</span> <Link to="/signup">CREATE ACCOUNT</Link>
+        <span>Don't have an account?</span> <Link to="/signup">Create one</Link>
       </div>
     </AuthLayout>
   );
@@ -115,7 +115,7 @@ export function SignUpPage() {
     if (signUpError) {
       setError(signUpError.message);
     } else {
-      setSuccess('Verification required. Check your email payload to initialize clearance.');
+      setSuccess('Check your email to verify your account before signing in.');
     }
     setLoading(false);
   };
@@ -125,18 +125,18 @@ export function SignUpPage() {
   };
 
   return (
-    <AuthLayout title="Initialize Clearance" subtitle="Create a new ResuMetric Enterprise profile.">
+    <AuthLayout title="Create your account" subtitle="Start analyzing your resume and track your progress over time.">
       <form onSubmit={handleSignUp} className="auth-form">
-        {error && <div className="error-module">ERROR: {error}</div>}
-        {success && <div className="success-module">STATUS: {success}</div>}
+        {error && <div className="error-module">{error}</div>}
+        {success && <div className="success-module">{success}</div>}
         
         <div className="input-group">
           <label htmlFor="fullName">Full Name</label>
-          <input id="fullName" type="text" value={fullName} onChange={e => setFullName(e.target.value)} required placeholder="Operator Designation" />
+          <input id="fullName" type="text" value={fullName} onChange={e => setFullName(e.target.value)} required placeholder="Jane Smith" />
         </div>
         <div className="input-group">
           <label htmlFor="email">Email Address</label>
-          <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="operator@domain.com" />
+          <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com" />
         </div>
         <div className="input-group">
           <label htmlFor="password">Password</label>
@@ -148,19 +148,19 @@ export function SignUpPage() {
         </div>
         
         <button type="submit" className="primary-action" disabled={loading}>
-          {loading ? 'Processing...' : 'Create Account'}
+          {loading ? 'Creating account...' : 'Create Account'}
         </button>
       </form>
       
-      <div className="oauth-divider"><span>OR INITIALIZE VIA</span></div>
+      <div className="oauth-divider"><span>or sign up with</span></div>
       
       <div className="oauth-grid">
-        <button className="secondary-action" onClick={() => handleOAuth('google')}>Google Sign Up</button>
-        <button className="secondary-action" onClick={() => handleOAuth('github')}>GitHub Sign Up</button>
+        <button className="secondary-action" onClick={() => handleOAuth('google')}>Google</button>
+        <button className="secondary-action" onClick={() => handleOAuth('github')}>GitHub</button>
       </div>
 
       <div className="auth-footer">
-        <span>CLEARANCE GRANTED?</span> <Link to="/login">SIGN IN</Link>
+        <span>Already have an account?</span> <Link to="/login">Sign in</Link>
       </div>
     </AuthLayout>
   );
@@ -185,26 +185,26 @@ export function ForgotPasswordPage() {
     if (resetError) {
       setError(resetError.message);
     } else {
-      setSuccess('Recovery sequence initiated. Check your email for instructions.');
+      setSuccess('Password reset link sent. Check your email for instructions.');
     }
     setLoading(false);
   };
 
   return (
-    <AuthLayout title="Recover Clearance" subtitle="Request a password reset link.">
+    <AuthLayout title="Reset password" subtitle="Enter your email and we'll send you a reset link.">
       <form onSubmit={handleReset} className="auth-form">
-        {error && <div className="error-module">ERROR: {error}</div>}
-        {success && <div className="success-module">STATUS: {success}</div>}
+        {error && <div className="error-module">{error}</div>}
+        {success && <div className="success-module">{success}</div>}
         <div className="input-group">
           <label htmlFor="email">Email Address</label>
-          <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="operator@domain.com" />
+          <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com" />
         </div>
         <button type="submit" className="primary-action" disabled={loading}>
-          {loading ? 'Transmitting...' : 'Send Recovery Link'}
+          {loading ? 'Sending...' : 'Send Reset Link'}
         </button>
       </form>
       <div className="auth-footer">
-        <Link to="/login">RETURN TO LOGIN</Link>
+        <Link to="/login">← Back to sign in</Link>
       </div>
     </AuthLayout>
   );
@@ -230,17 +230,17 @@ export function ResetPasswordPage() {
     if (updateError) {
       setError(updateError.message);
     } else {
-      setSuccess('Clearance updated successfully.');
+      setSuccess('Password updated successfully. Redirecting...');
       setTimeout(() => navigate('/dashboard'), 2000);
     }
     setLoading(false);
   };
 
   return (
-    <AuthLayout title="Update Clearance" subtitle="Enter your new security passkey.">
+    <AuthLayout title="Set new password" subtitle="Choose a new password for your account.">
       <form onSubmit={handleUpdate} className="auth-form">
-        {error && <div className="error-module">ERROR: {error}</div>}
-        {success && <div className="success-module">STATUS: {success}</div>}
+        {error && <div className="error-module">{error}</div>}
+        {success && <div className="success-module">{success}</div>}
         <div className="input-group">
           <label htmlFor="password">New Password</label>
           <input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••" />
