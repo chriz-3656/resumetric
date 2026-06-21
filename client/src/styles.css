@@ -28,6 +28,51 @@
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
+  --nav-bg: rgba(247, 244, 238, 0.85);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121110;
+  --surface: #1B1A18;
+  --panel: #242220;
+  --border: #3A3632;
+  --border-strong: #504B46;
+  --text: #EAE5DD;
+  --text-muted: #A39E96;
+  --text-dim: #77736D;
+  --accent: #E07A5F;
+  --accent-hover: #F28A6D;
+  --accent-light: rgba(224, 122, 95, 0.15);
+  --success: #639A6A;
+  --success-light: rgba(99, 154, 106, 0.15);
+  --danger: #D15F4F;
+  --danger-light: rgba(209, 95, 79, 0.15);
+  --amber: #D6A42E;
+  --amber-light: rgba(214, 164, 46, 0.15);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --nav-bg: rgba(18, 17, 16, 0.85);
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, color 0.2s;
+  border-radius: var(--radius-sm);
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.05);
+  color: var(--text);
+  background: var(--panel);
 }
 
 * {
@@ -192,7 +237,7 @@ button, input, select, textarea {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2.5rem;
-  background: rgba(247, 244, 238, 0.85);
+  background: var(--nav-bg);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -1936,4 +1981,63 @@ button, input, select, textarea {
   .hero-content h1 { font-size: 2rem; }
   .hero-section { padding: 3rem 1.5rem 2rem; }
   .static-page { padding: 3rem 1.5rem; }
+}
+
+/* ========== Smooth Animations & Transitions ========== */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes staggerSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.app-shell main, .app-shell .dashboard-container {
+  animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Staggered text & component loading */
+.static-page > *, .dashboard-container > *, .hero-content > *, .consult-grid > *, .trust-grid > * {
+  animation: staggerSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.static-page > *:nth-child(1), .dashboard-container > *:nth-child(1), .hero-content > *:nth-child(1), .consult-grid > *:nth-child(1), .trust-grid > *:nth-child(1) { animation-delay: 0.1s; }
+.static-page > *:nth-child(2), .dashboard-container > *:nth-child(2), .hero-content > *:nth-child(2), .consult-grid > *:nth-child(2), .trust-grid > *:nth-child(2) { animation-delay: 0.2s; }
+.static-page > *:nth-child(3), .dashboard-container > *:nth-child(3), .hero-content > *:nth-child(3), .consult-grid > *:nth-child(3), .trust-grid > *:nth-child(3) { animation-delay: 0.3s; }
+.static-page > *:nth-child(4), .dashboard-container > *:nth-child(4), .hero-content > *:nth-child(4), .consult-grid > *:nth-child(4), .trust-grid > *:nth-child(4) { animation-delay: 0.4s; }
+.static-page > *:nth-child(5), .dashboard-container > *:nth-child(5), .hero-content > *:nth-child(5), .consult-grid > *:nth-child(5), .trust-grid > *:nth-child(5) { animation-delay: 0.5s; }
+.static-page > *:nth-child(6), .dashboard-container > *:nth-child(6), .hero-content > *:nth-child(6), .consult-grid > *:nth-child(6), .trust-grid > *:nth-child(6) { animation-delay: 0.6s; }
+
+body {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Add global smooth color transition for all texts when toggling themes */
+h1, h2, h3, h4, h5, h6, p, span, a, label, li {
+  transition: color 0.4s ease;
+}
+
+.nav-container {
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+.card, .history-item, .trust-item, .stat-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease, background-color 0.4s ease;
+}
+
+.card:hover, .history-item:hover, .trust-item:hover, .stat-card:hover {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-strong);
+}
+
+.primary-action, .secondary-action {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.primary-action:hover, .secondary-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(200, 87, 60, 0.2);
 }

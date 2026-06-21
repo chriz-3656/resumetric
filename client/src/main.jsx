@@ -18,6 +18,8 @@ import './styles.css';
 import { supabase } from './supabase.js';
 import { LoginPage, SignUpPage, ForgotPasswordPage, ResetPasswordPage } from './AuthPages.jsx';
 import { DashboardPage } from './DashboardPage.jsx';
+import { ContactPage } from './ContactPage.jsx';
+import { AdminMessagesPage } from './AdminMessagesPage.jsx';
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement);
 
@@ -46,6 +48,12 @@ function App() {
   const [booting, setBooting] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [session, setSession] = useState(null);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  React.useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   React.useEffect(() => {
     if (supabase) {
@@ -74,7 +82,7 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <div className="app-shell">
-        <Header session={session} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        <Header session={session} menuOpen={menuOpen} setMenuOpen={setMenuOpen} theme={theme} setTheme={setTheme} />
         <Routes>
           <Route path="/" element={<LandingPage session={session} />} />
           <Route path="/about" element={<AboutPage />} />
@@ -86,6 +94,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={<DashboardPage session={session} />} />
+          <Route path="/contact" element={<ContactPage session={session} />} />
+          <Route path="/admin/messages" element={<AdminMessagesPage session={session} />} />
           <Route path="/r/:id" element={<SharePage />} />
         </Routes>
         <Footer />
@@ -449,10 +459,12 @@ function AboutPage() {
           <div className="text-block">
             <h3>The Creator</h3>
             <p>
-              Developed by Chriz (chriz-3656), a software engineer focused on 
-              building practical career tools. ResuMetric was created to give 
-              job seekers transparent, data-driven feedback on their resumes 
-              — pulling back the curtain on the often opaque hiring process.
+              ResuMetric is proudly developed by <strong>Chriz</strong>, a 20-year-old solo developer and cybersecurity student based in Kerala. Combining a deep understanding of security with a passion for building practical, high-impact software, he created this platform to give job seekers transparent, data-driven feedback on their resumes — pulling back the curtain on the often opaque hiring process.
+            </p>
+            <p style={{ marginTop: '1rem' }}>
+              <a href="https://chriz-3656.github.io" target="_blank" rel="noopener noreferrer" className="secondary-action" style={{ display: 'inline-block', padding: '0.4rem 1rem', fontSize: '0.9rem', textDecoration: 'none' }}>
+                View Developer Portfolio ↗
+              </a>
             </p>
           </div>
           <div className="text-block">
@@ -604,7 +616,9 @@ function ResumeHeatmap({ heatmapData = [] }) {
   );
 }
 
-function Header({ session, menuOpen, setMenuOpen }) {
+function Header({ session, menuOpen, setMenuOpen, theme, setTheme }) {
+  const toggleTheme = () => setTheme(t => (t === 'light' ? 'dark' : 'light'));
+
   return (
     <header className="nav-container">
       <Link className="brand" to="/" aria-label="ResuMetric">
@@ -619,8 +633,16 @@ function Header({ session, menuOpen, setMenuOpen }) {
         <span />
       </button>
       <nav className={menuOpen ? 'nav-links open' : 'nav-links'}>
+        <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle dark mode" title="Toggle dark mode">
+          {theme === 'dark' ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          )}
+        </button>
         <Link to="/">Analyze</Link>
         <Link to="/about">How It Works</Link>
+        <Link to="/contact">Contact</Link>
         <Link to="/blog">Insights</Link>
         
         {session ? (
@@ -987,21 +1009,22 @@ function Footer() {
       <div className="footer-main">
         <div className="footer-brand">
           <strong>ResuMetric</strong>
-          <span>© 2026 Chriz | chriz-3656</span>
+          <span>© 2026 ResuMetric. All rights reserved.</span>
           <p className="footer-mission">Resume Review & Career Advisory</p>
         </div>
         <div className="footer-links">
           <div className="link-group">
             <strong>Platform</strong>
             <Link to="/about">About</Link>
+            <Link to="/contact">Contact</Link>
             <Link to="/blog">Blog</Link>
             <Link to="/privacy">Privacy Policy</Link>
             <Link to="/terms">Terms of Service</Link>
           </div>
           <div className="link-group">
-            <strong>Company</strong>
-            <span>Created by Chriz (@chriz-3656)</span>
-            <span>GDPR & CCPA Compliant</span>
+            <strong>Developer</strong>
+            <span>Created by <a href="https://chriz-3656.github.io" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: '500' }}>Chriz (@chriz-3656)</a></span>
+            <span>Solo Kerala Developer</span>
           </div>
         </div>
       </div>
